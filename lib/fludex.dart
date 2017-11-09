@@ -55,7 +55,7 @@ class Action<S, T> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      runtimeType == other.runtimeType && action == other.action;
+      runtimeType == other.runtimeType && type == other.type;
 
   @override
   int get hashCode => type.hashCode ^ payload.hashCode;
