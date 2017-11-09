@@ -171,7 +171,7 @@ Built-in thunk middleware that is capable of handling `Thunk` actions.
 A `Thunk` action is just a function that takes `Store` as argument.
 
 example:
-```
+```dart
 // Example Thunk action
 Thunk action = (Store store) async {
        final result = await new Future.delayed(
@@ -193,7 +193,7 @@ will be dispatched containing the error that was returned.
 
 
  example:
- ```
+ ```dart
  // First, create a reducer that knows how to handle the FutureActions:
  // `FutureFulfilledAction` and `FutureRejectedAction`.
  String exampleReducer(String state,Action action) {
@@ -355,7 +355,7 @@ class HomeScreen extends StatelessWidget {
 
 ```
 #### SecondScreen
-```
+```dart
 class SecondScreen extends StatelessWidget {
   // Identifier for SecondScreen
   static final String name = "SecondScreen";
