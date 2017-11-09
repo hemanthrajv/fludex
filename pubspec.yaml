@@ -1,14 +1,17 @@
 name: fludex
 description: Flutter + Redux = Fludex
-version: 0.0.2
+version: 0.0.5
 author: Hemanth Raj <raj84325@gmail.com>
 homepage: https://github.com/hemanthrajv/fludex.git
+
+environment:
+    sdk: ">=1.8.0 <2.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
   logging: ^0.11.3
-  meta: ^1.1.2
+  meta: ^1.1.1
 
 dev_dependencies:
   test: ^0.12.0

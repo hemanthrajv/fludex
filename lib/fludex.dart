@@ -32,7 +32,7 @@ typedef void Thunk(Store store);
 ///         }
 ///         return state;
 ///       }
-typedef dynamic StateReducer(dynamic state, Action action);
+typedef S StateReducer<S>(S state, Action action);
 
 /// The type of Middleware functions. All middlewares are functions
 /// that receive [Store],[Action] and [NextDispatcher] as arguments.
@@ -55,7 +55,7 @@ class Action<S, T> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      runtimeType == other.runtimeType && type == other.type;
+      runtimeType == other.runtimeType;
 
   @override
   int get hashCode => type.hashCode ^ payload.hashCode;
@@ -286,7 +286,7 @@ class FutureRejectedAction<E> {
 
 /// [Reducer] is responsible for maintaining respective state.
 /// It takes an optional [initState] argument which will be the initial state for the reducer.
-class Reducer {
+class Reducer<T> {
   dynamic initState;
 
   StateReducer reduce;

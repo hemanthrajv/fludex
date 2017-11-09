@@ -7,3 +7,11 @@
 
 * Updated pubspec dependencies
 
+## [0.0.3] - Fludex
+
+* Sorry - pubspec update
+
+## [0.0.4] - Fludex
+
+## [0.0.5] - Fludex
+
