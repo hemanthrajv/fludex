@@ -14,7 +14,7 @@ A redux based state managment library specialy build only for Flutter.
 
 ## Basics
 ### Actions:
-Fludex has a built in `Action` type. Any action dispatched to the store should be of type `Action`.
+Fludex has a `Action` type. Any action dispatched to the store should be of type `Action`.
 The `Action` take two arguments `type` and `payload` (optional). The `type` defines what is the Type of Action and `payload` is some additional data dispatched to store.
 
 example:
@@ -42,7 +42,7 @@ Thunk thunkAction = (Store store) async {
 ```
 
 ### Reducers:
-There is a built-in `Reducer` type that takes `initState` (optional) and a `StateReducer` function as argument.
+There is a `Reducer` type that takes `initState` (optional) and a `StateReducer` function as argument.
 
 A `StateReducer` is a normal function that gets `state` and `action` as arguments, alters the state based on action and returns the new `state`.
 
