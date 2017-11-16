@@ -19,4 +19,4 @@
 
 * A type `FludexState` introduced with generics to make state typesafe.
 
-
+## [0.1.1] - Fludex

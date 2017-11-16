@@ -56,7 +56,9 @@ class FludexState<T>{
   T get state => _state;
 
   dynamic operator [](String key){
+    // ignore: undefined_operator
     if (_state is Map && _state[key] is FludexState){
+      // ignore: undefined_operator
       return _state[key].state;
     }else{
       return _state;
@@ -126,6 +128,7 @@ dynamic logger(Store store, Action action, NextDispatcher next) {
     String log = "{\n" +
         "  Action: ${action.toString()},\n" +
         "  Previous State: ${store.state.toString()},\n";
+    // ignore: use_of_void_result
     final dynamic result = next(action);
     log = log +
         "  Next State: ${store.state.toString()},\n" +
