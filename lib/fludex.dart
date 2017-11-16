@@ -26,13 +26,14 @@ typedef void Thunk(Store store);
 ///
 ///
 /// example:
-///       String exampleReducer(String state, Action action){
+///       FludexState exampleReducer(FludexState state_, Action action){
+///         String state = state_.state
 ///         if(action == "change"){
 ///           state = "changed";
 ///         }
-///         return state;
+///         return new FludexState(state);
 ///       }
-typedef S StateReducer<S>(S state, Action action);
+typedef FludexState<T> StateReducer<T>(FludexState<T> state, Action action);
 
 /// The type of Middleware functions. All middlewares are functions
 /// that receive [Store],[Action] and [NextDispatcher] as arguments.
@@ -44,6 +45,29 @@ typedef S StateReducer<S>(S state, Action action);
 ///         next(action);
 ///       }
 typedef dynamic Middleware(Store store, Action action, NextDispatcher next);
+
+
+/// Type of the app state
+class FludexState<T>{
+  final T _state;
+
+  FludexState(this._state);
+
+  T get state => _state;
+
+  dynamic operator [](String key){
+    if (_state is Map && _state[key] is FludexState){
+      return _state[key].state;
+    }else{
+      return _state;
+    }
+  }
+
+  @override
+  String toString(){
+    return _state.toString();
+  }
+}
 
 class Action<S, T> {
   final S type;
@@ -127,7 +151,6 @@ dynamic logger(Store store, Action action, NextDispatcher next) {
 ///         };
 void thunk(Store store, Action action, NextDispatcher next) {
   if (action.type is Thunk) {
-    debugPrint("type thunk");
     action.type(store);
   } else {
     next(action);
@@ -146,7 +169,8 @@ void thunk(Store store, Action action, NextDispatcher next) {
 /// example:
 ///     // First, create a reducer that knows how to handle the FutureActions:
 ///     // `FutureFulfilledAction` and `FutureRejectedAction`.
-///     String exampleReducer(String state,Action action) {
+///     FludexState exampleReducer(FludexState state_,Action action) {
+///       String state = state_.state;
 ///       if (action is String) {
 ///         return action;
 ///       } else if (action is FutureFulfilledAction) {
@@ -286,8 +310,8 @@ class FutureRejectedAction<E> {
 
 /// [Reducer] is responsible for maintaining respective state.
 /// It takes an optional [initState] argument which will be the initial state for the reducer.
-class Reducer<T> {
-  dynamic initState;
+class Reducer {
+  FludexState initState;
 
   StateReducer reduce;
 
@@ -305,24 +329,26 @@ class Reducer<T> {
 ///
 ///
 /// example:
-///         StateReducer reducerFun1 = (Int state, Action action){
+///         StateReducer reducerFun1 = (FludexState state_, Action action){
+///           int state = state_.state;
 ///           if(action is "INC"){
 ///             state = state + 1;
 ///           }
 ///           if(action is "DEC"){
 ///             state = state - 1;
 ///           }
-///           return state;
+///           return new FludexState(state);
 ///         }
 ///
-///         StateReducer reducerFun2 = (Int state, Action action){
+///         StateReducer reducerFun2 = (FludexState state_, Action action){
+///           int state = state_.state;
 ///           if(action is "ADD_5"){
 ///             state = state + 5;
 ///           }
 ///           if(action is "SUB_5"){
 ///             state = state - 5;
 ///           }
-///           return state;
+///           return new FludexState(state);
 ///         }
 ///
 ///         // Here initialState of HomeScreen is defined by initState of homeScreenReducer.
@@ -341,29 +367,33 @@ class Reducer<T> {
 ///         Store store = new Store({"reducer":rootReducer});
 class CombinedReducer implements Reducer {
   @override
-  dynamic initState;
+  FludexState initState;
 
   @override
   StateReducer reduce;
 
-  Map<String, Reducer> _reducers;
+  List<Reducer> _reducers = <Reducer>[];
 
   CombinedReducer(Map<String, Reducer> reducers) {
-    initState = new Map<String, dynamic>();
+    Map<String, FludexState> init = new Map<String,FludexState>();
     reduce = _reducer;
     reducers.forEach((String key, Reducer reducer) {
-      initState[key] = reducer.initState;
+       init[key] = reducer.initState;
+      _reducers.add(reducer);
     });
+    initState = new FludexState<Map<String,FludexState>>(init);
 
-    _reducers = reducers;
+    //_reducers = reducers;
   }
 
-  dynamic _reducer(dynamic state, Action action) {
-    final dynamic prevState = state;
-    _reducers.forEach((String key, Reducer reducer) {
-      final dynamic nextState = reducer.reduce(state[key], action);
-      state[key] = nextState;
-    });
+  FludexState _reducer(FludexState state, Action action) {
+    final FludexState prevState = state;
+    List<String> keys = new List.from(state.state.keys);
+    for(int i = 0;i<_reducers.length;i++){
+      Reducer reducer = _reducers[i];
+      final FludexState nextState = reducer.reduce(state.state[keys[i]], action);
+      state.state[keys[i]] = nextState;
+    };
     return state != prevState ? state : prevState;
   }
 }
@@ -419,7 +449,7 @@ class Store {
   // In case of only on reducer state will be of type defined by initstate of Reducer or null.
   // In case of multiple reducers combined with combine reducers,
   // state will be a Map<String, State> having respective keys of the reducers for respective states.
-  Map<String, dynamic> _state;
+  FludexState _state;
 
   // List of Middlewares that can be applied to the state.
   List<Middleware> _middlewares = [];
@@ -458,7 +488,7 @@ class Store {
   }
 
   // Allows access to application state.
-  Map<String, dynamic> get state => _state;
+  FludexState get state => _state;
 
   void _reduce(Action action) {
     final dynamic newState = _reducer.reduce(_state, action);

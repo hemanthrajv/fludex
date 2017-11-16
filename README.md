@@ -13,6 +13,14 @@ A redux based state managment library specialy build only for Flutter.
 
 
 ## Basics
+### FludexState:
+The application state is always of type `FludexState`. FludexState is implemented to make the state typesafe.
+
+example:
+```dart
+FludexState<int> initState = new FludexState<int>(0);
+```
+
 ### Actions:
 Fludex has a `Action` type. Any action dispatched to the store should be of type `Action`.
 The `Action` take two arguments `type` and `payload` (optional). The `type` defines what is the Type of Action and `payload` is some additional data dispatched to store.
@@ -49,13 +57,14 @@ A `StateReducer` is a normal function that gets `state` and `action` as argument
 ```dart
 
 // State
-int initState = 0;
+FludexState<int> initState = new FludexState<int>(0);
 
 // Reducer function of type StateReducer
-int reducerFunction(int state, Action action){
+FludexState reducerFunction(FludexState fludexState, Action action){
+    int state = fludexState.state;
 	if(action.type == "INC")
     	state++;
-    return state;
+    return new FludexState(state);
 }
 
 // Reducer
@@ -280,14 +289,15 @@ class HomeScreen extends StatelessWidget {
       new Reducer(initState: initState, reduce: _reducer);
 
   // Initial State of HomeScreen
-  static final int initState = 0;
+  static final FludexState<int> initState = new FludexState<int>(0);
 
   // StateReducer function for HomeScreen
-  static int _reducer(int state, Action action) {
-    if (action.type == "INC") state++;
-    if (action.type == "DEC") state--;
-    if (action.type == "UPDATE") state = action.payload;
-    return state;
+  static FludexState _reducer(FludexState state, Action action) {
+    int state_ = state.state;
+    if (action.type == "INC") state_++;
+    if (action.type == "DEC") state_--;
+    if (action.type == "UPDATE") state_ = action.payload;
+    return new FludexState<int>(state_);
   }
 
   // Dispatches a "INC" action
@@ -365,17 +375,17 @@ class SecondScreen extends StatelessWidget {
       new Reducer(initState: initState, reduce: _reducer);
 
   // Initial state of the screen
-  static final Map<String, dynamic> initState = <String, dynamic>{
+  static final FludexState<Map<String, dynamic>> initState = new FludexState<Map<String,dynamic>>(<String, dynamic>{
     "state": "Begin",
     "count": 0,
     "status": "FutureAction yet to be dispatched",
     "loading": false
-  };
+  });
 
   // StateReducer function that mutates the state of the screen.
   // Reducers are just functions that knows how to handle state changes and retuns the changed state.
-  static Map<String, dynamic> _reducer(Map<String, dynamic> state, Action action) {
-
+  static FludexState _reducer(FludexState _state, Action action) {
+    Map<String, dynamic> state = _state.state;
     if (action.type == "CHANGE") {
       state["state"] = "Refreshed";
       state["count"]++;
@@ -395,7 +405,7 @@ class SecondScreen extends StatelessWidget {
       _onLoading(action.payload["context"]);
     }
 
-    return state;
+    return new FludexState<Map<String,dynamic>>(state);
   }
 
   static void _onLoading(BuildContext context) {
@@ -495,6 +505,7 @@ class SecondScreen extends StatelessWidget {
     );
   }
 }
+
 ```
 
 To run the example.
