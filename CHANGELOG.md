@@ -15,3 +15,8 @@
 
 ## [0.0.5] - Fludex
 
+## [0.1.0] - Fludex
+
+* A type `FludexState` introduced with generics to make state typesafe.
+
+
