@@ -205,7 +205,8 @@ will be dispatched containing the error that was returned.
  ```dart
  // First, create a reducer that knows how to handle the FutureActions:
  // `FutureFulfilledAction` and `FutureRejectedAction`.
- String exampleReducer(String state,Action action) {
+ FludexState exampleReducer(FludexState fludexState,Action action) {
+   String state = fludexState.state;
    if (action is String) {
    return action;
    } else if (action is FutureFulfilledAction) {
@@ -214,7 +215,7 @@ will be dispatched containing the error that was returned.
    return action.error.toString();
    }
 
-  return state;
+  return new FludexState<String>(state);
 }
 
 // Next, create a Store that includes `futureMiddleware`. It will
@@ -292,8 +293,8 @@ class HomeScreen extends StatelessWidget {
   static final FludexState<int> initState = new FludexState<int>(0);
 
   // StateReducer function for HomeScreen
-  static FludexState _reducer(FludexState state, Action action) {
-    int state_ = state.state;
+  static FludexState _reducer(FludexState fludexState, Action action) {
+    int state_ = fludexState.state;
     if (action.type == "INC") state_++;
     if (action.type == "DEC") state_--;
     if (action.type == "UPDATE") state_ = action.payload;
