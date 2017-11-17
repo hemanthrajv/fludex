@@ -1,6 +1,6 @@
 import 'package:fludex/fludex.dart';
 import 'package:flutter/material.dart';
-import 'package:example/example.dart';
+import 'example.dart';
 
 void main(){
 

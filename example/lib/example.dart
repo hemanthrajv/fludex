@@ -49,7 +49,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-        title: const Text("HomeScreen"),
+        title: new Text("HomeScreen"),
       ),
       body: new Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -68,13 +68,13 @@ class HomeScreen extends StatelessWidget {
                   onPressed: _incrementCounter)
             ],
           ),
-          const Text(
+          new Text(
             "Dispatch a Thunk Action which resolves a future and resets the store once future resolved",
             textAlign: TextAlign.center,
           ),
           new FlatButton(
               onPressed: _thunkAction,
-              child: const Text("Dispatch Thunk Action"))
+              child: new Text("Dispatch Thunk Action"))
         ],
       ),
       floatingActionButton: new FloatingActionButton(
@@ -139,7 +139,7 @@ class SecondScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 const CircularProgressIndicator(),
-                const Text("Loading"),
+                new Text("Loading"),
               ],
             ),
           ),
@@ -201,20 +201,20 @@ class SecondScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-        title: const Text("SecondScreen"),
+        title: new Text("SecondScreen"),
       ),
       body: new Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           new StoreWrapper(builder: _buildText1),
-          const Text(
+          new Text(
             "Dispatch a FutureAction that resolves after 5 seconds",
             textAlign: TextAlign.center,
           ),
           new StoreWrapper(builder: _buildText2),
           new FlatButton(
               onPressed: () => _delayedAction(context),
-              child: const Text("Dispatch a future action"))
+              child: new Text("Dispatch a future action"))
         ],
       ),
       floatingActionButton: new FloatingActionButton(
